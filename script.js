@@ -24,15 +24,25 @@ function writeData(){
 
 var provider = new firebase.auth.GoogleAuthProvider();
 function googleLogin(){
-firebase.auth().signInWithPopup(provider).then(res=>{
+firebase.auth().signInWithPopup(provider).then(res =>{
   console.log(res)
-}).catch(e=>{
-  console.log(e)
+  console.log(`${res.user.displayName}`)
 })
 };
+// .then(res=>{
+//   console.log(res)
+// }).catch(e=>{
+//   console.log(e)
+// })
+// };
 function logout(){
-  firebase.auth().signOut().catch(e=>{
-  console.log(e)
-});
+  firebase.auth().signOut().then(res =>{
+    console.log(res)
+  }).catch(e=>{
+    console.log(e)
+  })
 };
-
+//   .catch(e=>{
+//   console.log(e)
+// });
+// };
