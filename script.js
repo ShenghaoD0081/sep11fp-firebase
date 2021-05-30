@@ -13,36 +13,96 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+  //Firestore
+  var db = firebase.firestore();
+  var userUID = [];
+  var userSignedIn = [];
 
 
-function writeData(){
-    firebase.database().ref("User").set({
-    name: document.getElementById("nameField").value,
-    age: document.getElementById("ageField").value
-  });
-}
 
+//Creating User Data
 var provider = new firebase.auth.GoogleAuthProvider();
 function googleLogin(){
-firebase.auth().signInWithPopup(provider).then(res =>{
-  console.log(res)
-  console.log(`${res.user.displayName}`)
+firebase.auth().signInWithPopup(provider).then(cred =>{
+  userUID = cred.user.uid;
+  userSignedIn = "loggedIn";
+  console.log(userUID);
+  db.collection(userUID).get().then((snapshot) => {
+  snapshot.docs.forEach(doc =>{
+    renderToDo(doc)
+  })
+  })
+  return db.collection(cred.user.uid).doc(cred.user.uid).set({
+  })
+
+  
 })
 };
-// .then(res=>{
-//   console.log(res)
-// }).catch(e=>{
-//   console.log(e)
-// })
-// };
-function logout(){
-  firebase.auth().signOut().then(res =>{
-    console.log(res)
-  }).catch(e=>{
-    console.log(e)
+
+
+//Saving Data
+document.addEventListener("DOMContentLoaded", function(){
+var form = document.querySelector("#myForm");
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  db.collection(userUID).add({
+    whatToDo: form.whatToDo.value,
+    //when: form.when.value
   })
-};
-//   .catch(e=>{
-//   console.log(e)
+  form.whatToDo.value = '';
+  //form.when.value = '';
+})
+
+});
+
+
+
+
+
+//Render toDo function
+const toDoList = document.querySelector('#list');
+function renderToDo(doc){
+  let li = document.createElement('li');
+  let doThis = document.createElement('span');
+  //let date = document.createElement('span');
+  console.log(doc.id)
+  li.setAttribute('data-id', doc.id);
+  doThis.textContent = doc.data().whatToDo;
+  //date.textContent = doc.data().when;
+
+  li.appendChild(doThis);
+  // li.appendChild(date);
+  list.appendChild(li);
+}
+
+//Getting Data
+if(userSignedIn == "loggedIn"){
+  console.log("hi");
+  db.collection(userUID).get().then((snapshot) => {
+  snapshot.docs.forEach(doc =>{
+    renderToDo(doc)
+  })
+})
+}
+
+//Test
+// db.collection('users').get(userUID).then((docs)=>{
+//     docs.forEach(doc => {
+//         renderToDo(doc);
+//     })
 // });
-// };
+
+//Realtime Listener
+function realtime(){
+  console.log(userSignedIn)
+  console.log(userUID)
+  db.collection(userUID).onSnapshot(snapshot => {
+  let changes = snapshot.docChanges();
+  changes.forEach(change =>{
+    console.log(change.doc.data())
+    if(change.type == "added"){
+      renderToDo(change.doc)
+    }
+  })
+})
+}

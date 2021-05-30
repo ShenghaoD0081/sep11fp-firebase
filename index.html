@@ -1,24 +1,41 @@
-<!DOCTYPE html>
+
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>repl.it</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
+    <title>To Do List</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
     <title>Firebase Test</title>
   </head>
   <body>
-<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-database.js"></script>
- <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
 <script src="script.js"></script>
 
 <h1>Testing</h1>
 <button onclick = "googleLogin()">Login Using Google</button>
-<button onclick = "logout()">Logout</button>
-<input type = "text" placeholder = "Name" id = "nameField">
-<input type = "text" placeholder = "Age" id = "ageField">
-<button onclick ="writeData()">Submit</button>
+  <form id = "myForm">
+  <input type = "text" placeholder = "What you want to do" name ="whatToDo">
+  <!--<input type = "text" placeholder = "When do you want to do it?" name ="when">-->
+  <button type = "submit">Add</button>
+</form>
+<button onclick = "realtime()">Update</button>
+
+
+
+
+
+
+
+
+
+
+<ul id = "list"></ul>
+
+
   </body>
+
 </html>
