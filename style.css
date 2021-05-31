@@ -1,0 +1,7 @@
+#space{
+    position: relative;
+    left: 25px;
+}
+#space:hover{
+    cursor: pointer;
+}

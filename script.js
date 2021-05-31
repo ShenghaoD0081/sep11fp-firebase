@@ -65,19 +65,28 @@ function renderToDo(doc){
   let li = document.createElement('li');
   let doThis = document.createElement('span');
   //let date = document.createElement('span');
-  console.log(doc.id)
+  let cross = document.createElement('span');
   li.setAttribute('data-id', doc.id);
   doThis.textContent = doc.data().whatToDo;
   //date.textContent = doc.data().when;
+  cross.textContent = "x"
 
   li.appendChild(doThis);
-  // li.appendChild(date);
+  li.appendChild(cross);
+  //li.appendChild(date);
   list.appendChild(li);
+  cross.id = "space"
+  
+  //deleting data
+  cross.addEventListener("click", e =>{
+    e.stopPropagation();
+    let id = e.target.parentElement.getAttribute("data-id");
+    db.collection(userUID).doc(id).delete()
+  })
 }
 
 //Getting Data
 if(userSignedIn == "loggedIn"){
-  console.log("hi");
   db.collection(userUID).get().then((snapshot) => {
   snapshot.docs.forEach(doc =>{
     renderToDo(doc)
@@ -92,10 +101,8 @@ if(userSignedIn == "loggedIn"){
 //     })
 // });
 
-//Realtime Listener
-function realtime(){
-  console.log(userSignedIn)
-  console.log(userUID)
+//Update
+function upd(){
   db.collection(userUID).onSnapshot(snapshot => {
   let changes = snapshot.docChanges();
   changes.forEach(change =>{
