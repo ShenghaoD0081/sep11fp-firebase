@@ -17,6 +17,7 @@
   var db = firebase.firestore();
   var userUID = [];
   var userSignedIn = [];
+  var toDoList = document.querySelector('#list');
 
 
 
@@ -25,20 +26,28 @@ var provider = new firebase.auth.GoogleAuthProvider();
 function googleLogin(){
 firebase.auth().signInWithPopup(provider).then(cred =>{
   userUID = cred.user.uid;
-  userSignedIn = "loggedIn";
-  console.log(userUID);
-  db.collection(userUID).get().then((snapshot) => {
-  snapshot.docs.forEach(doc =>{
-    renderToDo(doc)
+  userSignedIn = "signedIn";
+  //console.log(userUID);
+  //realtime data upd
+db.collection(userUID).onSnapshot(snapshot => {
+  let changes = snapshot.docChanges();
+    changes.forEach(change =>{
+    //console.log('[data-id=' + change.doc.id + ']')
+      if(change.type == "added"){
+      renderToDo(change.doc)
+      }else if(change.type == "removed"){
+      let li = toDoList.querySelector('data-id=' + change.doc.id + ']');
+      toDoList.removeChild(li);
+      console.log(change.doc.id)         
+        }
   })
-  })
-  return db.collection(cred.user.uid).doc(cred.user.uid).set({
-  })
+})
 
+return db.collection(cred.user.uid).doc(cred.user.uid).set({})
   
 })
-};
 
+};
 
 //Saving Data
 document.addEventListener("DOMContentLoaded", function(){
@@ -52,15 +61,8 @@ form.addEventListener('submit', (e) => {
   form.whatToDo.value = '';
   //form.when.value = '';
 })
-
 });
-
-
-
-
-
 //Render toDo function
-const toDoList = document.querySelector('#list');
 function renderToDo(doc){
   let li = document.createElement('li');
   let doThis = document.createElement('span');
@@ -85,31 +87,20 @@ function renderToDo(doc){
   })
 }
 
-//Getting Data
-if(userSignedIn == "loggedIn"){
-  db.collection(userUID).get().then((snapshot) => {
-  snapshot.docs.forEach(doc =>{
-    renderToDo(doc)
-  })
-})
-}
+// //Getting Data
+// if(userSignedIn == "loggedIn"){
+//   db.collection(userUID).get().then((snapshot) => {
+//   snapshot.docs.forEach(doc =>{
+//     renderToDo(doc)
+//   })
+// })
+// }
 
-//Test
-// db.collection('users').get(userUID).then((docs)=>{
-//     docs.forEach(doc => {
-//         renderToDo(doc);
-//     })
-// });
 
-//Update
-function upd(){
-  db.collection(userUID).onSnapshot(snapshot => {
-  let changes = snapshot.docChanges();
-  changes.forEach(change =>{
-    console.log(change.doc.data())
-    if(change.type == "added"){
-      renderToDo(change.doc)
-    }
-  })
-})
-}
+  // db.collection(userUID).get().then((snapshot) => {
+  // snapshot.docs.forEach(doc =>{
+  //   renderToDo(doc)
+  // })
+  // })
+
+
