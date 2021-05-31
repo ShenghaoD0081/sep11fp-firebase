@@ -12,17 +12,18 @@
 <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
-<script src="script.js"></script>
+<!--<script src="script.js"></script>-->
+<script src="script.js" defer></script>
 
-<h1>Testing</h1>
-<button onclick = "googleLogin()">Login Using Google</button>
+<h1>To Do List</h1>
+<button onclick = "googleLogin()" id = "login">Login Using Google</button>
   <form id = "myForm">
   <input type = "text" placeholder = "What you want to do" name ="whatToDo">
   <!--<input type = "text" placeholder = "When do you want to do it?" name ="when">-->
   <button type = "submit">Add</button>
 </form>
-<button onclick = "upd()">Update</button>
-<ul id = "list"></ul>
+<ul id = "list">
+</ul>
 
 
   </body>

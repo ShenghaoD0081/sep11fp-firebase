@@ -17,9 +17,7 @@
   var db = firebase.firestore();
   var userUID = [];
   var userSignedIn = [];
-  var toDoList = document.querySelector('#list');
-
-
+  var toDo = document.querySelector('#list');
 
 //Creating User Data
 var provider = new firebase.auth.GoogleAuthProvider();
@@ -32,12 +30,11 @@ firebase.auth().signInWithPopup(provider).then(cred =>{
 db.collection(userUID).onSnapshot(snapshot => {
   let changes = snapshot.docChanges();
     changes.forEach(change =>{
-    //console.log('[data-id=' + change.doc.id + ']')
       if(change.type == "added"){
       renderToDo(change.doc)
       }else if(change.type == "removed"){
-      let li = toDoList.querySelector('data-id=' + change.doc.id + ']');
-      toDoList.removeChild(li);
+      let li = toDo.querySelector('[data-id=' + change.doc.id + ']');
+      toDo.removeChild(li);
       console.log(change.doc.id)         
         }
   })
@@ -46,7 +43,7 @@ db.collection(userUID).onSnapshot(snapshot => {
 return db.collection(cred.user.uid).doc(cred.user.uid).set({})
   
 })
-
+document.getElementById("login").style.display = "none";
 };
 
 //Saving Data
@@ -76,7 +73,7 @@ function renderToDo(doc){
   li.appendChild(doThis);
   li.appendChild(cross);
   //li.appendChild(date);
-  list.appendChild(li);
+  toDo.appendChild(li);
   cross.id = "space"
   
   //deleting data
@@ -86,21 +83,4 @@ function renderToDo(doc){
     db.collection(userUID).doc(id).delete()
   })
 }
-
-// //Getting Data
-// if(userSignedIn == "loggedIn"){
-//   db.collection(userUID).get().then((snapshot) => {
-//   snapshot.docs.forEach(doc =>{
-//     renderToDo(doc)
-//   })
-// })
-// }
-
-
-  // db.collection(userUID).get().then((snapshot) => {
-  // snapshot.docs.forEach(doc =>{
-  //   renderToDo(doc)
-  // })
-  // })
-
 
